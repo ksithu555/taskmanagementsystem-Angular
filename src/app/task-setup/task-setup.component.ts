@@ -5,6 +5,8 @@ import { TaskService } from '../_services/task.service';
 import * as alertify from 'alertifyjs';
 import { EditTaskComponent } from './edit-task/edit-task.component';
 import { UpdateStatusComponent } from './update-status/update-status.component';
+import { HttpParams } from '@angular/common/http';
+
 @Component({
   selector: 'app-task-setup',
   templateUrl: './task-setup.component.html',
@@ -41,36 +43,36 @@ export class TaskSetupComponent implements OnInit {
     this.getTasksIncomplete();
   }
 
-  logout(){
+  logout() {
     localStorage.setItem('loginToken', '');
     this.ngOnInit();
   }
 
-  getTasksall(){
-    this.taskService.GetTasks().subscribe(x =>{
-      if(x){
+  getTasksall() {
+    this.taskService.GetTasks().subscribe(x => {
+      if (x) {
         this.dataSource = x.data;
       }
     })
   }
 
-  getTasksComplete(){
-    this.taskService.GetTasksComplete().subscribe(x =>{
-      if(x){
+  getTasksComplete() {
+    this.taskService.GetTasksComplete().subscribe(x => {
+      if (x) {
         this.dataSourceComplete = x.data;
       }
     })
   }
 
-  getTasksIncomplete(){
-    this.taskService.GetTasksIncomplete().subscribe(x =>{
-      if(x){
+  getTasksIncomplete() {
+    this.taskService.GetTasksIncomplete().subscribe(x => {
+      if (x) {
         this.dataSourceIncomplete = x.data;
       }
     })
   }
 
-  createTask(){
+  createTask() {
     const dataId = '';
     const dialogRef = this.dialog.open(CreateTaskComponent, {
       width: '700px',
@@ -81,7 +83,7 @@ export class TaskSetupComponent implements OnInit {
     });
   }
 
-  editTask(id: any){
+  editTask(id: any) {
     const dataId = id;
     const dialogRef = this.dialog.open(EditTaskComponent, {
       width: '700px',
@@ -92,7 +94,7 @@ export class TaskSetupComponent implements OnInit {
     });
   }
 
-  updateStatus(id: any){
+  updateStatus(id: any) {
     const dataId = id;
     const dialogRef = this.dialog.open(UpdateStatusComponent, {
       width: '700px',
@@ -110,49 +112,59 @@ export class TaskSetupComponent implements OnInit {
       () => {
         this.delete(row.id);
       },
-      () => {}
+      () => { }
     );
   }
   delete(id: any) {
     this.taskService.DeleteTask(id).subscribe((x) => {
       if (x.success) {
-        alertify.success('Delete Successfully!');
         this.ngOnInit();
+        alertify.success('Delete Successfully!');
       } else {
         alertify.error('Error!');
       }
     });
   }
-  checkChange(id: any){
-    var x = -1;
-    this.selectionIds.forEach((element,index)=>{
-      if(element==id) 
-        x = index;
-   });
-   if(x == -1){
-    this.selectionIds.push(id);
-   }
-   else{
-    delete this.selectionIds[x];
-   }
+  checkChange(event: any, id: any) {
+    if (event.checked) {
+      this.selectionIds.push(id)
+    }
+    else if (!event.checked) {
+      this.selectionIds.forEach((element, index) => {
+        if (element == id) this.selectionIds.splice(index, 1);
+      })
+    }
   }
 
-  completedTasks(){
+  completedTasks() {
     if(this.selectionIds.length > 0) {
-      this.selectionIds.forEach((element,index)=>{
-        this.taskService.UpdateStatus(element).subscribe( x => {
-          if (x.success == true) {
-            alertify.success("Save Successfully");
-          } else {
-            alertify.error("Save Unsuccessfully");
-          }
-        });
-     });
+      let params = new HttpParams();
+
+      params = params.append('ids', JSON.stringify(this.selectionIds));
+
+      this.taskService.BatchUpdate(params).subscribe(x => {
+        this.ngOnInit();
+      })
     }
     else {
       alertify.error("You must select at least one");
     }
-    this.ngOnInit();
+    this.selectionIds = [];
+  }
+
+  deleteTasks () {
+    if(this.selectionIds.length > 0) {
+      let params = new HttpParams();
+
+      params = params.append('ids', JSON.stringify(this.selectionIds));
+
+      this.taskService.BatchDelete(params).subscribe(x => {
+        this.ngOnInit();
+      })
+    }
+    else {
+      alertify.error("You must select at least one");
+    }
     this.selectionIds = [];
   }
 }

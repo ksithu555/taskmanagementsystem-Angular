@@ -4,69 +4,87 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 export class TaskService {
   constructor(
     private http: HttpClient,
-    ) {}
+  ) { }
 
   //protected apiUrl = "https://polar-eyrie-44848.herokuapp.com/api/";
   protected apiUrl = "http://127.0.0.1:8000/api/";
 
-  isLoggedIn(){
-    return localStorage.getItem('loginToken') !='';
+  isLoggedIn() {
+    return localStorage.getItem('loginToken') != '';
   }
 
   GetTasks() {
     return this.http.get<any>(
-      this.apiUrl+`tasks`
+      this.apiUrl + `tasks`
     );
   }
   GetTasksComplete() {
     return this.http.get<any>(
-      this.apiUrl+`completed-tasks`
+      this.apiUrl + `completed-tasks`
     );
   }
   GetTasksIncomplete() {
     return this.http.get<any>(
-      this.apiUrl+`incompleted-tasks`
+      this.apiUrl + `incompleted-tasks`
     );
   }
 
-  CreateTask(data: any){
+  CreateTask(data: any) {
     return this.http.post<any>(
-      this.apiUrl+`tasks`,data
-     );
+      this.apiUrl + `tasks`, data
+    );
   }
 
-  UpdateTask(id: any, data: any){
+  UpdateTask(id: any, data: any) {
     return this.http.put<any>(
-      this.apiUrl+`tasks/`+id,data
-     );
+      this.apiUrl + `tasks/` + id, data
+    );
   }
 
-  GetTaskById(id: any){
+  GetTaskById(id: any) {
     return this.http.get<any>(
-      this.apiUrl+`tasks/`+ id
+      this.apiUrl + `tasks/` + id
     );
   }
 
   Login(data: any) {
     return this.http.post<any>(
-       this.apiUrl+`login`,data
-      );
+      this.apiUrl + `login`, data
+    );
   }
 
-  GetToken(){
+  Register(data: any) {
+    return this.http.post<any>(
+      this.apiUrl + `register`, data
+    );
+  }
+
+  GetToken() {
     return localStorage.getItem('loginToken') || '';
   }
 
-  DeleteTask(id: any){
+  DeleteTask(id: any) {
     return this.http.delete<any>(
-      this.apiUrl+`tasks/`+ id
+      this.apiUrl + `tasks/` + id
     );
   }
 
-  UpdateStatus(id: any){
+  UpdateStatus(id: any) {
     return this.http.put<any>(
-      this.apiUrl+`tasks/update-status/`+id,id
+      this.apiUrl + `tasks/update-status/` + id, id
     );
+  }
+
+  BatchUpdate(data: any) {
+    return this.http.post<any>(
+      this.apiUrl + `tasks/multiple-update/`, data
+    )
+  }
+
+  BatchDelete(data: any) {
+    return this.http.post<any>(
+      this.apiUrl + `tasks/multiple-delete/`, data
+    )
   }
 
 }

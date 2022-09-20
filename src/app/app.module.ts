@@ -13,6 +13,7 @@ import { TokenInterceptorService } from './_services/token-interceptor.service';
 import { EditTaskComponent } from './task-setup/edit-task/edit-task.component';
 import { UpdateStatusComponent } from './task-setup/update-status/update-status.component';
 import { HomeComponent } from './home/home.component';
+import { RegisterComponent } from './register/register.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { HomeComponent } from './home/home.component';
     CreateTaskComponent,
     EditTaskComponent,
     UpdateStatusComponent,
-    HomeComponent
+    HomeComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

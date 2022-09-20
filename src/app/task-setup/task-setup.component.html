@@ -27,7 +27,7 @@
         </div>
         <hr />
         <div class="row">
-            <div class="col-6">
+            <div class="col-5">
                 <h6>Completed Task Table</h6><br />
                 <div class="table" *ngIf="dataSourceComplete.length>0">
                     <div class="example-container mat-elevation-z8">
@@ -101,7 +101,16 @@
                 </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-7">
+                <button
+                  style="float:right;"
+                  mat-flat-button
+                  color="warn"
+                  (click)="deleteTasks()"
+                  class="search m-1"
+                >
+                  Delete
+                </button>
                 <button
                   style="float:right;"
                   mat-flat-button
@@ -111,6 +120,7 @@
                 >
                   Completed
                 </button>
+
                 <h6>Incompleted Task Table</h6>
                 <br />
                 <div class="table" *ngIf="dataSourceIncomplete.length>0">
@@ -139,20 +149,14 @@
 
                             <ng-container matColumnDef="completed">
                                 <mat-header-cell *matHeaderCellDef>
-                                    Completed
+                                    Completed/Delete
                                 </mat-header-cell>
                                 <mat-cell *matCellDef="let row">
                                     <mat-checkbox 
+                                    id={{row.id}}
                                     (click)="$event.stopPropagation()" 
-                                    (change)="$event ? checkChange(row.id) : null"></mat-checkbox>  
-                                    <a
-                                        title="UpdateStatus"
-                                        class="btn" 
-                                        (click)="updateStatus(row.id)"
-                                        >
+                                    (change)="$event ? checkChange($event,row.id) : null"></mat-checkbox>  
                                     
-                                        <mat-icon color="accent">sync</mat-icon>
-                                    </a>
                                 </mat-cell>
                             </ng-container>
     
@@ -161,6 +165,14 @@
                                     Actions
                                 </mat-header-cell>
                                 <mat-cell *matCellDef="let row">
+                                    <a
+                                        title="UpdateStatus"
+                                        class="btn" 
+                                        (click)="updateStatus(row.id)"
+                                        >
+                                    
+                                        <mat-icon color="accent">sync</mat-icon>
+                                    </a>
                                     <a
                                     title="Edit"
                                     class="btn" 
