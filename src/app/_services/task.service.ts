@@ -6,8 +6,8 @@ export class TaskService {
     private http: HttpClient,
   ) { }
 
-  //protected apiUrl = "https://polar-eyrie-44848.herokuapp.com/api/";
-  protected apiUrl = "http://127.0.0.1:8000/api/";
+  protected apiUrl = "https://task-management-system-kst.herokuapp.com/api/";
+  //protected apiUrl = "http://127.0.0.1:8000/api/";
 
   isLoggedIn() {
     return localStorage.getItem('loginToken') != '';
